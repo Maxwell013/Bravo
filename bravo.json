@@ -1,0 +1,6 @@
+{
+  "project_name": "bravo",
+  "project_type": "exec",
+  "entry": "main.cpp",
+  "deps": ["/Users/maxwell013/Dev/Lima", "/Users/maxwell013/Dev/Juliett"]
+}
