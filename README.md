@@ -5,11 +5,19 @@ This library is part of a long term project that aims to build a small game engi
 This is the fifth project.
 
 ## Dependencies
-- [Lima](https://github.com/Maxwell013/Lima)
-- [Juliett](https://github.com/Maxwell013/Juliett)
+- [https://github.com/Maxwell013/Lima](https://github.com/Maxwell013/Lima)
+- [https://github.com/Maxwell013/Juliett](https://github.com/Maxwell013/Juliett)
 
 ## Documentation
 Comming soon
 
 ## Upcoming Features
+- New commands
+  - Run
+  - Clean
+  - Help
+  - Doctor
+- New flags
+  - Verbose
+  - Deps
 - Official documentation
