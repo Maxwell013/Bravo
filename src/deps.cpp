@@ -20,9 +20,7 @@ void deps::scanProject(BuildContext *bctx, const ConfigContext *cfg) {
     fs::path src = cfg->root;
     src /= BRV_DIR_SRC;
     bctx->src_dir = src;
-    if (!file::isdir(src)) {
-        BRV_THROW("Project must contain a 'src' directory.");
-    }
+    BRV_ASSERT(file::isdir(src), "Project must contain a 'src' directory.");
 
     for (const fs::directory_entry &entry : fs::recursive_directory_iterator(src)) {
         if (!entry.is_regular_file()) continue;
@@ -42,9 +40,8 @@ void deps::scanProject(BuildContext *bctx, const ConfigContext *cfg) {
 
     fs::path include = cfg->root;
     include /= BRV_DIR_INCLUDE;
-    if (!file::isdir(include)) {
-        BRV_THROW("Project must contain a 'include' directory.");
-    }
+    BRV_ASSERT(file::isdir(include), "Project must contain a 'include' directory.");
+
     bctx->include_dir = include;
     bctx->include_dirs.emplace_back(include);
 }

@@ -2,7 +2,7 @@
 A lightweight build system for C++.
 
 This library is part of a long term project that aims to build a small game engine and break it down into various smaller projects.
-This is the fifth project.
+This is the fifth project and is still under development.
 
 ## Dependencies
 - [Lima](https://github.com/Maxwell013/Lima)

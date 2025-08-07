@@ -37,6 +37,8 @@ std::string cli::fuzzyMatch(const std::string &input, const std::vector<std::str
     default:
         BRV_THROW("Ambiguous command!");
     }
+    BRV_THROW("Unreachable!");
+    return ""; // for compiler warning
 }
 
 void cli::setOpt(CmdContext *cctx, const std::string &opt) {
@@ -47,7 +49,5 @@ void cli::setOpt(CmdContext *cctx, const std::string &opt) {
     case BRV_OPT_DEPS_ID:
         cctx->rebuild = true;
         return;
-    default:
-        BRV_THROW("Unreachable!");
     }
 }

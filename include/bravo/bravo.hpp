@@ -12,6 +12,11 @@
 #include <juliett/juliett.hpp>
 #include <lima/lima.hpp>
 
+// META DEFINES
+#define BRV_VERSION_MAJOR 0
+#define BRV_VERSION_MINOR 1
+#define BRV_VERSION_PATCH 2
+
 // CLI DEFINES
 // ---
 // Command strings
@@ -66,7 +71,9 @@
 #define BRV_WARNING(...) brv::LOGGER.log(lm::LogType::Warning, __VA_ARGS__)
 #define BRV_ERROR(...) brv::LOGGER.log(lm::LogType::Error, __VA_ARGS__)
 #define BRV_FATAL(...) brv::LOGGER.log(lm::LogType::Fatal, __VA_ARGS__)
-#define BRV_THROW(...) brv::LOGGER.log(lm::LogType::Fatal, __VA_ARGS__); exit(EXIT_FAILURE)
+#define BRV_CONDITIONAL(condition, ...) brv::LOGGER.log(condition, lm::LogType::Info, __VA_ARGS__)
+#define BRV_THROW(...) brv::LOGGER.assert(false, lm::LogType::Fatal, __VA_ARGS__)
+#define BRV_ASSERT(assertion, ...) brv::LOGGER.assert(assertion, lm::LogType::Fatal, __VA_ARGS__)
 
 
 namespace fs = std::filesystem;
@@ -172,9 +179,11 @@ namespace brv {
     namespace build {
         void compile(const CmdContext *cctx);
         void link(const CmdContext *cctx);
-        void worker(const std::vector<std::string> &cmds, std::atomic<size_t> &index);
+        void worker(const int id, const bool verbose, const std::vector<std::string> &cmds, std::atomic<size_t> &index);
         std::string linkExec(const ProjectContext *pctx, const std::vector<fs::path> &archs);
         std::string linkStatic(const ProjectContext *pctx, std::vector<fs::path> &archs);
+        bool rebuild(const fs::path &src, const fs::path &obj);
+        int threadCount(const std::vector<std::string> &cmds);
     } // namespace build
 
     namespace file {
@@ -208,7 +217,7 @@ namespace brv {
     // PARSING CONSTANTS
     // ---
     // Literal : project type
-    inline const std::vector<std::string> VALID_PROJECT_TYPES = {
+    inline const std::set<std::string> VALID_PROJECT_TYPES = {
         BRV_PROJECT_TYPE_EXEC,
         BRV_PROJECT_TYPE_STATIC,
     };
@@ -221,6 +230,5 @@ namespace brv {
     };
 
     // Logs
-    inline const lm::Flag FLAGS = lm::flags::DEFAULTS &~lm::flags::PREFIX_WHITESPACE;
-    inline const lm::Logger& LOGGER = *new lm::Logger("BRAVO", FLAGS);
+    inline const lm::Logger& LOGGER = *new lm::Logger("BRAVO", lm::flags::DEFAULTS);
 } // namespace brv

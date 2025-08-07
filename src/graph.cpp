@@ -12,11 +12,8 @@ void brv::resolveProtocol(CmdContext *cctx) {
 void graph::build(std::set<fs::path> &visited, std::set<fs::path> &visiting, CmdContext *cctx, ProjectContext *pctx) {
     fs::path root = pctx->config->root;
 
-    if (visiting.contains(root)) {
-        BRV_THROW("Circular dependecy involving '", pctx->config->project_name, "'.");
-    }
-    if (visited.contains(root))
-        return;
+    BRV_ASSERT(!visiting.contains(root), "Circular dependecy involving '", pctx->config->project_name, "'.");
+    if (visited.contains(root)) return;
 
     visiting.insert(root);
 
