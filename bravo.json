@@ -4,5 +4,5 @@
   "entry": "main.cpp",
   "deps": ["/Users/maxwell013/Dev/Lima", "/Users/maxwell013/Dev/Juliett"],
   "build_name": "bravo",
-  "run_args": "help"
+  "run_args": "help --verbose"
 }

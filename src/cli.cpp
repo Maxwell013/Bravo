@@ -20,6 +20,8 @@ CmdContext *brv::processCliArgs(int argc, char **argv) {
         cli::setOpt(cctx, opt);
     }
 
+    BRV_CONDITIONAL(cctx->verbose, "Verbose logging enabled!");
+
     return cctx;
 }
 
@@ -31,11 +33,11 @@ std::string cli::fuzzyMatch(const std::string &input, const std::vector<std::str
 
     switch (matches.size()) {
     case 0:
-        BRV_THROW("Unkown command!");
+        BRV_THROW("Unkown command or argument!");
     case 1:
         return matches[0];
     default:
-        BRV_THROW("Ambiguous command!");
+        BRV_THROW("Ambiguous command or argument!");
     }
     BRV_THROW("Unreachable!");
     return ""; // for compiler warning

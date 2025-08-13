@@ -15,7 +15,7 @@
 // META DEFINES
 #define BRV_VERSION_MAJOR 0
 #define BRV_VERSION_MINOR 1
-#define BRV_VERSION_PATCH 3
+#define BRV_VERSION_PATCH 4
 
 // CLI DEFINES
 // ---
@@ -96,6 +96,8 @@ namespace brv {
         std::string project_type;
         std::optional<std::string> entry;
         std::vector<fs::path> deps;
+        std::string build_name;
+        std::optional<std::string> run_args;
     };
     // Parsed build data
     struct BuildContext {

@@ -26,6 +26,8 @@ void config::load(ConfigContext *cfg) {
     cfg->project_type = getString(json, BRV_KEY_PROJECT_TYPE);
     cfg->entry = getOptString(json, BRV_KEY_ENTRY);
     cfg->deps = getPathVec(json, BRV_KEY_DEPS);
+    cfg->build_name = getString(json, BRV_KEY_BUILD_NAME);
+    cfg->run_args = getOptString(json, BRV_KEY_RUN_ARGS);
 
     delete json;
 }

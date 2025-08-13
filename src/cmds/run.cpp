@@ -10,6 +10,9 @@ void cmd::run(const CmdContext *cctx) {
     BRV_ASSERT(pctx->config->project_type == BRV_PROJECT_TYPE_EXEC, "Cannot run a project of type '", pctx->config->project_type, "'");
 
     const fs::path rel = fs::relative(pctx->build->end_dst, pctx->build->bin_dir);
-    int exit_code = std::system(rel.c_str());
+
+    std::string args = pctx->config->run_args.has_value() ? pctx->config->run_args.value() : "";
+
+    int exit_code = std::system((rel.string() + " " + args).c_str());
     BRV_CONDITIONAL(cctx->verbose, "Program exited with code : ", exit_code);
 }

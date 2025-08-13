@@ -33,7 +33,7 @@ void deps::scanProject(BuildContext *bctx, const ConfigContext *cfg) {
     fs::path bin = cfg->root;
     bin /= BRV_DIR_BIN;
     bctx->bin_dir = bin;
-    bin /= cfg->project_name + (cfg->project_type == BRV_PROJECT_TYPE_EXEC ? BRV_FILE_EXT_EXE : BRV_FILE_EXT_ARCHIVE);
+    bin /= cfg->build_name + (cfg->project_type == BRV_PROJECT_TYPE_EXEC ? BRV_FILE_EXT_EXE : BRV_FILE_EXT_ARCHIVE);
     bctx->end_dst = bin;
 
     fs::path obj = cfg->root;

@@ -3,8 +3,6 @@
 using namespace brv;
 
 void brv::executeCommand(CmdContext *cctx) {
-    BRV_CONDITIONAL(cctx->verbose, "Verbose logging enabled!");
-
     cctx->cmd.call(cctx);
 }
 
