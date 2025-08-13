@@ -2,6 +2,12 @@
 
 using namespace brv;
 
+void brv::executeCommand(CmdContext *cctx) {
+    BRV_CONDITIONAL(cctx->verbose, "Verbose logging enabled!");
+
+    cctx->cmd.call(cctx);
+}
+
 void brv::releaseContext(CmdContext *cctx) {
     for (ProjectContext *pctx : cctx->projects) {
         delete pctx->build;

@@ -1,6 +1,8 @@
 {
-  "project_name": "bravo",
+  "project_name": "Bravo",
   "project_type": "exec",
   "entry": "main.cpp",
-  "deps": ["/Users/maxwell013/Dev/Lima", "/Users/maxwell013/Dev/Juliett"]
+  "deps": ["/Users/maxwell013/Dev/Lima", "/Users/maxwell013/Dev/Juliett"],
+  "build_name": "bravo",
+  "run_args": "help"
 }

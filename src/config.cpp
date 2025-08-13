@@ -12,7 +12,7 @@ ConfigContext *brv::processConfigFile(const CmdContext *cctx, const fs::path &ro
 
     config::load(cfg);
 
-    config::validate(cfg);
+    config::validate(cfg, cctx);
 
     return cfg;
 }

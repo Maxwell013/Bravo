@@ -19,9 +19,9 @@ int main(int argc, char** argv) {
     brv::resolveProtocol(cctx);
 
     // Execute the command
-    cctx->cmd.call(cctx);
+    brv::executeCommand(cctx);
 
-    // destroy context (cleanup)
+    // delete context (cleanup)
     brv::releaseContext(cctx);
 
     return EXIT_SUCCESS;

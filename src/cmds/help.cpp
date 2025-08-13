@@ -3,7 +3,7 @@
 using namespace brv;
 
 void cmd::help(const CmdContext *cctx) {
-    BRV_CONDITIONAL(cctx->verbose, "Verbose logging enabled!");
+    BRV_UNUSED(cctx);
     BRV_TRACE(
         "\n\n    Bravo v",
         BRV_VERSION_MAJOR,

@@ -16,8 +16,6 @@ Comming soon
 
 ## Upcoming Features
 - New commands
-  - Run
-  - Clean
   - Doctor
 - Official documentation
   - Build from source guide

@@ -4,9 +4,10 @@
 
 using namespace brv;
 
-void config::validate(const ConfigContext *cfg) {
+void config::validate(const ConfigContext *cfg, const CmdContext *cctx) {
     for (const Validation &validation : VALIDATION_MAP) {
-        validation.call(cfg); // TODO : Lima log
+        validation.call(cfg);
+        BRV_CONDITIONAL(cctx->verbose, "Validating in project '", cfg->project_name, "': ", validation.name);
     }
 }
 void config::validateProjectName(const ConfigContext *cfg) {

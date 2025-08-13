@@ -104,11 +104,8 @@ void build::link(const CmdContext *cctx) {
 std::string build::linkExec(const ProjectContext *pctx, const std::vector<fs::path> &archs) {
     std::ostringstream cmd;
 
-    fs::path dst = pctx->build->bin_dir;
-    dst /= (pctx->config->project_name + BRV_FILE_EXT_EXE);
-
     cmd << "clang++ -std=c++20 -Wall -Wextra -Werror -pedantic-errors"; // tmp
-    cmd << " -o " << dst;
+    cmd << " -o " << pctx->build->end_dst;
 
     for (const fs::path &arch : archs)
         cmd << " " << arch;
@@ -122,12 +119,9 @@ std::string build::linkExec(const ProjectContext *pctx, const std::vector<fs::pa
 std::string build::linkStatic(const ProjectContext *pctx, std::vector<fs::path> &archs) {
     std::ostringstream cmd;
 
-    fs::path dst = pctx->build->bin_dir;
-    dst /= (pctx->config->project_name + BRV_FILE_EXT_ARCHIVE); // TODO : add config field for bin filename
+    cmd << "ar rcs " << pctx->build->end_dst;
 
-    cmd << "ar rcs " << dst; // tmp
-
-    archs.emplace_back(dst);
+    archs.emplace_back(pctx->build->end_dst);
 
     for (const fs::path &obj : pctx->build->obj_files)
         cmd << " " << obj;
