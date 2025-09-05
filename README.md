@@ -2,7 +2,7 @@
 A lightweight build system for C++.
 
 This library is part of a long term project that aims to build a small game engine and break it down into various smaller projects.
-See the master project for more details.
+See the master project ([https://github.com/users/Maxwell013/projects/3](https://github.com/users/Maxwell013/projects/3))for more details.
 
 ## Dependencies
 ### Usage
