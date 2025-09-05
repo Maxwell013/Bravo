@@ -1,6 +1,8 @@
 #pragma once
 
+#include <climits>
 #include <cstddef>
+#include <map>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -13,71 +15,104 @@
 #include <lima/lima.hpp>
 
 // META DEFINES
-#define BRV_VERSION_MAJOR 0
-#define BRV_VERSION_MINOR 1
-#define BRV_VERSION_PATCH 4
+
+#define BRV_VERSION_MAJOR               0
+#define BRV_VERSION_MINOR               2
+#define BRV_VERSION_PATCH               0
 
 // CLI DEFINES
-// ---
-// Command strings
-#define BRV_CMD_HELP_STR            "help"
-#define BRV_CMD_BUILD_STR           "build"
-#define BRV_CMD_RUN_STR             "run"
-#define BRV_CMD_CLEAN_STR           "clean"
-// Command constants
-#define BRV_CMD_HELP_SKIP_CONFIG    true
-#define BRV_CMD_BUILD_SKIP_CONFIG   false
-#define BRV_CMD_RUN_SKIP_CONFIG     false
-#define BRV_CMD_CLEAN_SKIP_CONFIG   true
-// Option strings
-#define BRV_OPT_VERBOSE_STR         "--verbose"
-#define BRV_OPT_DEPS_STR            "--deps"
-// Option ids
-#define BRV_OPT_VERBOSE_ID          0
-#define BRV_OPT_DEPS_ID             1
+
+#define BRV_CMD_HELP_STR                "help"
+#define BRV_CMD_BUILD_STR               "build"
+#define BRV_CMD_RUN_STR                 "run"
+#define BRV_CMD_CLEAN_STR               "clean"
+#define BRV_CMD_INIT_STR                "init"
+#define BRV_CMD_TEST_STR                "test"
+
+#define BRV_CMD_HELP_USAGE              "Show this message"
+#define BRV_CMD_BUILD_USAGE             "Compile and link the current project"
+#define BRV_CMD_RUN_USAGE               "Compile, link and run the current project"
+#define BRV_CMD_CLEAN_USAGE             "Remove binary and object file directories"
+#define BRV_CMD_INIT_USAGE              "Create new project in current directory"
+#define BRV_CMD_TEST_USAGE              "Compile, link and run tests"
+
+#define BRV_CMD_HELP_SKIP_CONFIG        true
+#define BRV_CMD_BUILD_SKIP_CONFIG       false
+#define BRV_CMD_RUN_SKIP_CONFIG         false
+#define BRV_CMD_CLEAN_SKIP_CONFIG       true
+#define BRV_CMD_INIT_SKIP_CONFIG        true
+#define BRV_CMD_TEST_SKIP_CONFIG        false
+
+#define BRV_CMD_HELP_NON_OPT_ARGC_MAX   0
+#define BRV_CMD_BUILD_NON_OPT_ARGC_MAX  0
+#define BRV_CMD_RUN_NON_OPT_ARGC_MAX    0
+#define BRV_CMD_CLEAN_NON_OPT_ARGC_MAX  0
+#define BRV_CMD_INIT_NON_OPT_ARGC_MAX   1
+#define BRV_CMD_TEST_NON_OPT_ARGC_MAX   USHRT_MAX
+
+#define BRV_OPT_VERBOSE_STR_LONG        "verbose"
+#define BRV_OPT_DEPS_STR_LONG           "deps"
+#define BRV_OPT_NO_BUILD_STR_LONG       "no-build"
+
+#define BRV_OPT_VERBOSE_STR_SHRT        'v'
+#define BRV_OPT_DEPS_STR_SHRT           'd'
+#define BRV_OPT_NO_BUILD_STR_SHRT       'n'
+
+#define BRV_OPT_VERBOSE_USAGE           "Enable verbose logging"
+#define BRV_OPT_DEPS_USAGE              "Force build all dependencies recursively"
+#define BRV_OPT_NO_BUILD_USAGE          "Skip auto re-build"
+
+#define BRV_OPT_VERBOSE_ID              0
+#define BRV_OPT_DEPS_ID                 1
+#define BRV_OPT_NO_BUILD_ID             2
 
 // INTERNAL DEFINES
-// ---
-// File names
-#define BRV_FILE_NAME_CONFIG        "bravo.json"
-// File extentions
-#define BRV_FILE_EXT_CPP            ".cpp"
-#define BRV_FILE_EXT_OBJ            ".o"
-#define BRV_FILE_EXT_ARCHIVE        ".a"
-#define BRV_FILE_EXT_EXE            ""
-// Directory names
-#define BRV_DIR_SRC                 "src"
-#define BRV_DIR_OBJ                 "obj"
-#define BRV_DIR_BIN                 "bin"
-#define BRV_DIR_INCLUDE             "include"
+
+#define BRV_FILE_NAME_CONFIG            "bravo.json"
+#define BRV_FILE_EXT_CPP                ".cpp"
+#define BRV_FILE_EXT_OBJ                ".o"
+#define BRV_FILE_EXT_ARCHIVE            ".a"
+#define BRV_FILE_EXT_EXE                ""
+
+#define BRV_DIR_SRC                     "src"
+#define BRV_DIR_OBJ                     "obj"
+#define BRV_DIR_BIN                     "bin"
+#define BRV_DIR_INCLUDE                 "include"
+#define BRV_DIR_TEST                    "tests"
 
 // PARSING DEFINES
-// ---
-// Keys
-#define BRV_KEY_PROJECT_NAME        "project_name"
-#define BRV_KEY_PROJECT_TYPE        "project_type"
-#define BRV_KEY_ENTRY               "entry"
-#define BRV_KEY_DEPS                "deps"
-#define BRV_KEY_BUILD_NAME          "build_name"
-#define BRV_KEY_RUN_ARGS            "run_args"
-// Literals
-#define BRV_PROJECT_TYPE_EXEC       "exec"
-#define BRV_PROJECT_TYPE_STATIC     "static"
-// Validation
-#define BRV_VALIDATION_PROJECT_NAME "Name validation"
-#define BRV_VALIDATION_PROJECT_TYPE "Type validation"
-#define BRV_VALIDATION_ENTRY        "Entry validation"
-#define BRV_VALIDATION_DEPS         "Deps validation"
+
+#define BRV_KEY_PROJECT_NAME            "project_name"
+#define BRV_KEY_PROJECT_TYPE            "project_type"
+#define BRV_KEY_ENTRY                   "entry"
+#define BRV_KEY_DEPS                    "deps"
+#define BRV_KEY_BUILD_NAME              "build_name"
+#define BRV_KEY_RUN_ARGS                "run_args"
+
+#define BRV_PROJECT_TYPE_EXEC           "exec"
+#define BRV_PROJECT_TYPE_STATIC         "static"
+
+#define BRV_VALIDATION_PROJECT_NAME     "Name validation"
+#define BRV_VALIDATION_PROJECT_TYPE     "Type validation"
+#define BRV_VALIDATION_ENTRY            "Entry validation"
+#define BRV_VALIDATION_DEPS             "Deps validation"
+
+// DEFAULT DEFINES
+
+#define BRV_DEFAULT_PROJECT_NAME        "MyProject"
+#define BRV_DEFAULT_PROJECT_TYPE        BRV_PROJECT_TYPE_EXEC
+#define BRV_DEFAULT_ENTRY               "main.cpp"
+#define BRV_DEFAULT_BUILD_NAME          "myproject"
 
 // LOGGING DEFINES
-// ---
+
 #define BRV_TRACE(...) brv::LOGGER.log(lm::LogType::Trace, __VA_ARGS__)
 #define BRV_DEBUG(...) brv::LOGGER.log(lm::LogType::Debug, __VA_ARGS__)
 #define BRV_INFO(...) brv::LOGGER.log(lm::LogType::Info, __VA_ARGS__)
 #define BRV_WARNING(...) brv::LOGGER.log(lm::LogType::Warning, __VA_ARGS__)
 #define BRV_ERROR(...) brv::LOGGER.log(lm::LogType::Error, __VA_ARGS__)
 #define BRV_FATAL(...) brv::LOGGER.log(lm::LogType::Fatal, __VA_ARGS__)
-// Utils
+
 #define BRV_CONDITIONAL(condition, ...) brv::LOGGER.log(condition, lm::LogType::Info, __VA_ARGS__)
 #define BRV_THROW(...) brv::LOGGER.assert(false, lm::LogType::Error, __VA_ARGS__)
 #define BRV_ASSERT(assertion, ...) brv::LOGGER.assert(assertion, lm::LogType::Error, __VA_ARGS__)
@@ -87,27 +122,38 @@
 namespace fs = std::filesystem;
 
 namespace brv {
+    // TYPE ALIASES
+
+    struct CmdContext;
+    typedef std::function<void(const CmdContext *)> BravoCmd;
+    typedef std::function<std::string(const std::vector<fs::path> &, std::vector<fs::path> &, const fs::path &)> LinkProcess;
+
     // STRUCTS
-    // ---
-    // Parsed config file
+
+    // Config file tokens
     struct ConfigContext {
         fs::path root;
+
         std::string project_name;
         std::string project_type;
-        std::optional<std::string> entry;
-        std::vector<fs::path> deps;
         std::string build_name;
+        std::optional<std::string> entry;
         std::optional<std::string> run_args;
+        std::vector<fs::path> deps;
     };
-    // Parsed build data
+    // Build data
     struct BuildContext {
         fs::path end_dst;
         fs::path bin_dir;
         fs::path obj_dir;
         fs::path src_dir;
+        fs::path test_dir;
         fs::path include_dir;
         std::vector<fs::path> src_files;
         std::vector<fs::path> obj_files;
+        std::vector<fs::path> test_src_files;
+        std::vector<fs::path> test_obj_files;
+        std::vector<fs::path> test_exe_files;
         std::vector<fs::path> include_dirs;
     };
     // Project config and build context
@@ -116,10 +162,10 @@ namespace brv {
         BuildContext *build;
     };
     // Cmd struct for function pointer and command constants
-    struct CmdContext;
     struct Cmd {
-        std::function<void(const CmdContext *cctx)> call;
+        BravoCmd call;
         bool skip_config;
+        unsigned int non_opt_argc_max;
     };
     // Validation struct for function pointer and name
     struct Validation {
@@ -131,20 +177,23 @@ namespace brv {
         Cmd cmd;
         bool verbose = false;
         bool rebuild = false;
-        std::unordered_map<fs::path, std::vector<fs::path>> graph;
+        bool no_build = false;
+        std::vector<std::string> non_opt_args;
+        std::unordered_map<fs::path, std::vector<fs::path>> dep_graph;
         std::vector<ProjectContext *> projects;
         std::vector<ProjectContext *> build_protocol;
+        ProjectContext *active_project;
     };
 
     // MAIN INTERFACE
-    // ---
-    // Process cli arguments -- uses cli namespace
+
+    // Process cli arguments
     CmdContext *processCliArgs(int argc, char **argv);
-    // Parse project config file -- uses config namespace
+    // Parse project config file
     ConfigContext *processConfigFile(const CmdContext *cctx, const fs::path &root);
-    // Recursively parse dependecies -- uses deps namespace
+    // Recursively parse dependecies
     BuildContext *processDeps(const ConfigContext *cfg, CmdContext *cctx);
-    // Resolve dependecy graph and build protocol -- uses graph namespace
+    // Resolve dependecy graph and build protocol
     void resolveProtocol(CmdContext *cctx);
     // Execute the parsed command
     void executeCommand(CmdContext *cctx);
@@ -152,28 +201,34 @@ namespace brv {
     void releaseContext(CmdContext *cctx);
 
     // COMMANDS
-    // ---
+
     namespace cmd {
-        // Help : prints out the usage guidlines
+        // Prints out the usage guidlines
         void help(const CmdContext *cctx);
-        // Build : compiles and links the project
+        // Compiles and links the project
         void build(const CmdContext *cctx);
-        // Run : compiles, links and runs the final executable
+        // Compiles, links and runs the final executable
         void run(const CmdContext *cctx);
-        // Clean : removes binary and object directories
+        // Removes binary and object directories
         void clean(const CmdContext *cctx);
+        // Creates source directory, include directory and config file
+        void init(const CmdContext *cctx);
+        // Compiles, links and runs test executables
+        void test(const CmdContext *cctx);
     } // namespace cmd
 
     // INTERNAL FUNCTIONS
-    // ---
+
     namespace cli {
         std::string fuzzyMatch(const std::string &input, const std::vector<std::string> &valid);
-        void setOpt(CmdContext *cctx, const std::string &opt);
+        void parseArg(const std::string &input, const std::string &cmd, CmdContext *cctx);
+        void setOpt(CmdContext *cctx, const std::string &cmd, unsigned int opt_id);
     } // namespace cli
 
     namespace graph {
         void build(std::set<fs::path> &visited, std::set<fs::path> &visiting, CmdContext *cctx, ProjectContext *pctx);
     } // namespace graph
+
     namespace config {
         void load(ConfigContext *cfg);
         jltt::JValue *read(const fs::path &root);
@@ -195,9 +250,10 @@ namespace brv {
     namespace build {
         void compile(const CmdContext *cctx);
         void link(const CmdContext *cctx);
-        void worker(const int id, const bool verbose, const std::vector<std::string> &cmds, std::atomic<size_t> &index);
-        std::string linkExec(const ProjectContext *pctx, const std::vector<fs::path> &archs);
-        std::string linkStatic(const ProjectContext *pctx, std::vector<fs::path> &archs);
+        void worker(unsigned int id, bool verbose, const std::vector<std::string> &cmds, std::atomic<size_t> &index);
+        std::string linkExec(const std::vector<fs::path> &objs, std::vector<fs::path> &archs, const fs::path &dst);
+        std::string linkStatic(const std::vector<fs::path> &objs, std::vector<fs::path> &archs, const fs::path &dst);
+        std::string makeCompileCommand(const std::string &common, const fs::path &src, const fs::path &dst);
         bool rebuild(const fs::path &src, const fs::path &obj);
         int threadCount(const std::vector<std::string> &cmds);
     } // namespace build
@@ -205,45 +261,110 @@ namespace brv {
     namespace file {
         bool isdir(const fs::path &dir);
         bool isfile(const fs::path &file);
+        void recurse(const fs::path &dir, std::vector<fs::path> &files, const std::string &target_ext);
+        void swap(const std::vector<fs::path> &srcs, std::vector<fs::path> &dsts, const fs::path &src, const fs::path &dst, const std::string &ext);
     } // namespace file
 
     // CLI CONSTANTS
-    // ---
-    // Valid strings for fuzzy finding commands
-    inline const std::vector<std::string> VALID_CMD_STRS = {
+
+    inline const std::vector<std::string> CMD_VECTOR = {
         BRV_CMD_HELP_STR,
         BRV_CMD_BUILD_STR,
         BRV_CMD_RUN_STR,
         BRV_CMD_CLEAN_STR,
+        BRV_CMD_INIT_STR,
+        BRV_CMD_TEST_STR,
     };
-    // Command map for function calls
-    inline std::unordered_map<std::string, Cmd> CMD_MAP = {
-        {BRV_CMD_HELP_STR, {cmd::help, BRV_CMD_HELP_SKIP_CONFIG}},
-        {BRV_CMD_BUILD_STR, {cmd::build, BRV_CMD_BUILD_SKIP_CONFIG}},
-        {BRV_CMD_RUN_STR, {cmd::run, BRV_CMD_RUN_SKIP_CONFIG}},
-        {BRV_CMD_CLEAN_STR, {cmd::clean, BRV_CMD_CLEAN_SKIP_CONFIG}},
+    inline const std::unordered_map<std::string, std::string> CMD_USAGE_MAP = {
+        {BRV_CMD_HELP_STR, BRV_CMD_HELP_USAGE},
+        {BRV_CMD_BUILD_STR, BRV_CMD_BUILD_USAGE},
+        {BRV_CMD_RUN_STR, BRV_CMD_RUN_USAGE},
+        {BRV_CMD_CLEAN_STR, BRV_CMD_CLEAN_USAGE},
+        {BRV_CMD_INIT_STR, BRV_CMD_INIT_USAGE},
+        {BRV_CMD_TEST_STR, BRV_CMD_TEST_USAGE},
     };
-    // Valid strings for fuzzy finding options
-    inline std::unordered_map<std::string, std::vector<std::string>> VALID_OPT_STRS = {
-        {BRV_CMD_HELP_STR, {BRV_OPT_VERBOSE_STR}},
-        {BRV_CMD_BUILD_STR, {BRV_OPT_VERBOSE_STR, BRV_OPT_DEPS_STR}},
-        {BRV_CMD_RUN_STR, {BRV_OPT_VERBOSE_STR, BRV_OPT_DEPS_STR}},
-        {BRV_CMD_CLEAN_STR, {BRV_OPT_VERBOSE_STR}},
+    inline const std::unordered_map<std::string, Cmd> CMD_MAP = {
+        {BRV_CMD_HELP_STR, {
+            cmd::help,
+            BRV_CMD_HELP_SKIP_CONFIG,
+            BRV_CMD_HELP_NON_OPT_ARGC_MAX,
+        }},
+        {BRV_CMD_BUILD_STR, {
+            cmd::build,
+            BRV_CMD_BUILD_SKIP_CONFIG,
+            BRV_CMD_BUILD_NON_OPT_ARGC_MAX,
+        }},
+        {BRV_CMD_RUN_STR, {
+            cmd::run,
+            BRV_CMD_RUN_SKIP_CONFIG,
+            BRV_CMD_RUN_NON_OPT_ARGC_MAX,
+        }},
+        {BRV_CMD_CLEAN_STR, {
+            cmd::clean,
+            BRV_CMD_CLEAN_SKIP_CONFIG,
+            BRV_CMD_CLEAN_NON_OPT_ARGC_MAX,
+        }},
+        {BRV_CMD_INIT_STR, {
+            cmd::init,
+            BRV_CMD_INIT_SKIP_CONFIG,
+            BRV_CMD_INIT_NON_OPT_ARGC_MAX,
+        }},
+        {BRV_CMD_TEST_STR, {
+            cmd::test,
+            BRV_CMD_TEST_SKIP_CONFIG,
+            BRV_CMD_TEST_NON_OPT_ARGC_MAX,
+        }},
     };
-    // Options map for fast lookup
-    inline std::unordered_map<std::string, int> OPT_MAP {
-        {BRV_OPT_VERBOSE_STR, BRV_OPT_VERBOSE_ID},
-        {BRV_OPT_DEPS_STR, BRV_OPT_DEPS_ID}
+    inline const std::unordered_map<std::string, std::set<unsigned int>> VALID_OPT_IDS = {
+        {BRV_CMD_HELP_STR, {BRV_OPT_VERBOSE_ID}},
+        {BRV_CMD_BUILD_STR, {BRV_OPT_VERBOSE_ID, BRV_OPT_DEPS_ID}},
+        {BRV_CMD_RUN_STR, {BRV_OPT_VERBOSE_ID, BRV_OPT_DEPS_ID, BRV_OPT_NO_BUILD_ID}},
+        {BRV_CMD_CLEAN_STR, {BRV_OPT_VERBOSE_ID}},
+        {BRV_CMD_INIT_STR, {BRV_OPT_VERBOSE_ID}},
+        {BRV_CMD_TEST_STR, {BRV_OPT_VERBOSE_ID, BRV_OPT_DEPS_ID, BRV_OPT_NO_BUILD_ID}},
+    };
+    inline const std::vector<std::string> OPT_LONG_VECTOR {
+        BRV_OPT_VERBOSE_STR_LONG,
+        BRV_OPT_DEPS_STR_LONG,
+        BRV_OPT_NO_BUILD_STR_LONG,
+    };
+    inline const std::set<char> OPT_SHORT_SET {
+        BRV_OPT_VERBOSE_STR_SHRT,
+        BRV_OPT_DEPS_STR_SHRT,
+        BRV_OPT_NO_BUILD_STR_SHRT,
+    };
+    inline const std::unordered_map<std::string, unsigned int> OPT_LONG_MAP {
+        {BRV_OPT_VERBOSE_STR_LONG, BRV_OPT_VERBOSE_ID},
+        {BRV_OPT_DEPS_STR_LONG, BRV_OPT_DEPS_ID},
+        {BRV_OPT_NO_BUILD_STR_LONG, BRV_OPT_NO_BUILD_ID},
+    };
+    inline const std::unordered_map<char, unsigned int> OPT_SHORT_MAP {
+        {BRV_OPT_VERBOSE_STR_SHRT, BRV_OPT_VERBOSE_ID},
+        {BRV_OPT_DEPS_STR_SHRT, BRV_OPT_DEPS_ID},
+        {BRV_OPT_NO_BUILD_STR_SHRT, BRV_OPT_NO_BUILD_ID},
+    };
+
+    inline const std::map<std::string, std::pair<char, std::string>> OPT_USAGE_MAP = {
+        {BRV_OPT_VERBOSE_STR_LONG, {
+            BRV_OPT_VERBOSE_STR_SHRT,
+            BRV_OPT_VERBOSE_USAGE
+        }},
+        {BRV_OPT_DEPS_STR_LONG, {
+            BRV_OPT_DEPS_STR_SHRT,
+            BRV_OPT_DEPS_USAGE
+        }},
+        {BRV_OPT_NO_BUILD_STR_LONG, {
+            BRV_OPT_NO_BUILD_STR_SHRT,
+            BRV_OPT_NO_BUILD_USAGE
+        }},
     };
 
     // PARSING CONSTANTS
-    // ---
-    // Literal : project type
+
     inline const std::set<std::string> VALID_PROJECT_TYPES = {
         BRV_PROJECT_TYPE_EXEC,
         BRV_PROJECT_TYPE_STATIC,
     };
-    // Validation map for function calls
     inline const std::vector<Validation> VALIDATION_MAP = {
         {config::validateProjectName, BRV_VALIDATION_PROJECT_NAME},
         {config::validateProjectType, BRV_VALIDATION_PROJECT_TYPE},
@@ -251,6 +372,14 @@ namespace brv {
         {config::validateDeps, BRV_VALIDATION_DEPS},
     };
 
-    // Logs
+    // BUILDING CONSTANTS
+
+    inline const std::unordered_map<std::string, LinkProcess> LINK_PROCESS_MAP = {
+        {BRV_PROJECT_TYPE_EXEC, build::linkExec},
+        {BRV_PROJECT_TYPE_STATIC, build::linkStatic},
+    };
+
+    // LOGGING CONSTANTS
+
     inline const lm::Logger& LOGGER = *new lm::Logger("BRAVO", lm::flags::DEFAULTS);
 } // namespace brv

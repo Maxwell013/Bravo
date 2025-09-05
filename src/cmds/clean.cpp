@@ -10,4 +10,9 @@ void cmd::clean(const CmdContext *cctx) {
     fs::remove_all(root / BRV_DIR_BIN);
     BRV_CONDITIONAL(cctx->verbose, "Removing object directory!");
     fs::remove_all(root / BRV_DIR_OBJ);
+
+    BRV_CONDITIONAL(cctx->verbose, "Removing test binary directory!");
+    fs::remove_all(root / BRV_DIR_TEST / BRV_DIR_BIN);
+    BRV_CONDITIONAL(cctx->verbose, "Removing test object directory!");
+    fs::remove_all(root / BRV_DIR_TEST / BRV_DIR_OBJ);
 }

@@ -10,6 +10,7 @@ void config::validate(const ConfigContext *cfg, const CmdContext *cctx) {
         BRV_CONDITIONAL(cctx->verbose, "Validating in project '", cfg->project_name, "': ", validation.name);
     }
 }
+
 void config::validateProjectName(const ConfigContext *cfg) {
     BRV_ASSERT(!cfg->project_name.empty(), "Project must have a non-empty name.");
 }

@@ -17,35 +17,43 @@ BuildContext *brv::processDeps(const ConfigContext *cfg, CmdContext *cctx) {
 }
 
 void deps::scanProject(BuildContext *bctx, const ConfigContext *cfg) {
-    fs::path src = cfg->root;
-    src /= BRV_DIR_SRC;
-    bctx->src_dir = src;
-    BRV_ASSERT(file::isdir(src), "Project must contain a 'src' directory.");
+    fs::path root = cfg->root;
 
-    for (const fs::directory_entry &entry : fs::recursive_directory_iterator(src)) {
-        if (!entry.is_regular_file()) continue;
+    bctx->bin_dir = root / BRV_DIR_BIN;
+    bctx->include_dir = root / BRV_DIR_INCLUDE;
+    bctx->obj_dir = root / BRV_DIR_OBJ;
+    bctx->src_dir = root / BRV_DIR_SRC;
+    bctx->test_dir = root / BRV_DIR_TEST;
 
-        fs::path ext = entry.path().extension();
-        if (ext == BRV_FILE_EXT_CPP)
-            bctx->src_files.emplace_back(fs::absolute(entry.path()));
+    BRV_ASSERT(file::isdir(bctx->src_dir), "Project must contain a 'src' directory.");
+    BRV_ASSERT(file::isdir(bctx->include_dir), "Project must contain a 'include' directory.");
+
+    file::recurse(bctx->src_dir, bctx->src_files, BRV_FILE_EXT_CPP);
+    file::swap(bctx->src_files, bctx->obj_files, bctx->src_dir, bctx->obj_dir, BRV_FILE_EXT_OBJ);
+
+    if (file::isdir(bctx->test_dir / BRV_DIR_SRC)) {
+        file::recurse(bctx->test_dir / BRV_DIR_SRC, bctx->test_src_files, BRV_FILE_EXT_CPP);
+        file::swap(
+            bctx->test_src_files,
+            bctx->test_obj_files,
+            bctx->test_dir / BRV_DIR_SRC,
+            bctx->test_dir / BRV_DIR_OBJ,
+            BRV_FILE_EXT_OBJ
+        );
+        file::swap(
+            bctx->test_src_files,
+            bctx->test_exe_files,
+            bctx->test_dir / BRV_DIR_SRC,
+            bctx->test_dir / BRV_DIR_BIN,
+            BRV_FILE_EXT_EXE
+        );
     }
 
-    fs::path bin = cfg->root;
-    bin /= BRV_DIR_BIN;
-    bctx->bin_dir = bin;
-    bin /= cfg->build_name + (cfg->project_type == BRV_PROJECT_TYPE_EXEC ? BRV_FILE_EXT_EXE : BRV_FILE_EXT_ARCHIVE);
-    bctx->end_dst = bin;
 
-    fs::path obj = cfg->root;
-    obj /= BRV_DIR_OBJ;
-    bctx->obj_dir = obj;
+    std::string ext = cfg->project_type == BRV_PROJECT_TYPE_EXEC ? BRV_FILE_EXT_EXE : BRV_FILE_EXT_ARCHIVE;
 
-    fs::path include = cfg->root;
-    include /= BRV_DIR_INCLUDE;
-    BRV_ASSERT(file::isdir(include), "Project must contain a 'include' directory.");
-
-    bctx->include_dir = include;
-    bctx->include_dirs.emplace_back(include);
+    bctx->end_dst = bctx->bin_dir / (cfg->build_name + ext);
+    bctx->include_dirs.emplace_back(bctx->include_dir);
 }
 
 void deps::scanDeps(const ConfigContext *cfg, CmdContext *cctx) {

@@ -1,8 +1,8 @@
-# Bravo
+# Bravo 0.2.0
 A lightweight build system for C++.
 
 This library is part of a long term project that aims to build a small game engine and break it down into various smaller projects.
-This is the fifth project and is still under development.
+See the master project for more details.
 
 ## Dependencies
 ### Usage
@@ -13,9 +13,3 @@ This is the fifth project and is still under development.
 
 ## Documentation
 Comming soon
-
-## Upcoming Features
-- New commands
-  - Doctor
-- Official documentation
-  - Build from source guide

@@ -5,11 +5,11 @@ using namespace brv;
 void cmd::run(const CmdContext *cctx) {
     cmd::build(cctx); // TODO : skip linking if possible
 
-    const ProjectContext *pctx = cctx->build_protocol.back();
+    const ProjectContext *pctx = cctx->active_project;
 
     BRV_ASSERT(pctx->config->project_type == BRV_PROJECT_TYPE_EXEC, "Cannot run a project of type '", pctx->config->project_type, "'");
 
-    const fs::path rel = fs::relative(pctx->build->end_dst, pctx->build->bin_dir);
+    const fs::path rel = fs::relative(pctx->build->end_dst, pctx->config->root);
 
     std::string args = pctx->config->run_args.has_value() ? pctx->config->run_args.value() : "";
 

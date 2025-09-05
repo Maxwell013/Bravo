@@ -3,7 +3,7 @@
 using namespace brv;
 
 void cmd::build(const CmdContext *cctx) {
-    BRV_CONDITIONAL(cctx->verbose && cctx->rebuild, "Dependecy rebuild enabled!");
+    if (cctx->no_build) return;
     build::compile(cctx);
     build::link(cctx);
 }

@@ -8,6 +8,7 @@ int main(int argc, char** argv) {
     cctx = brv::processCliArgs(argc, argv);
 
     cctx->projects.emplace_back(pctx);
+    cctx->active_project = pctx;
 
     // Load and validate the json config file
     pctx->config = brv::processConfigFile(cctx, fs::current_path());
